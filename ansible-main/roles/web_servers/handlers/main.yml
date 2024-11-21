@@ -1,0 +1,13 @@
+- name: port443
+  ansible.posix.firewalld:
+    service: https
+    immediate: true
+    permanent: true
+    state: enabled
+
+- name: port80
+  ansible.posix.firewalld:
+    service: http
+    immediate: true
+    permanent: true
+    state: enabled

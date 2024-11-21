@@ -1,0 +1,119 @@
+#Ansible
+
+Some notes for a blog
+
+.
+├── ansible.cfg
+├── baseline.yml
+├── inventory.txt
+└── roles
+    ├── baseline
+    │   ├── handlers
+    │   │   └── main.yml
+    │   └── tasks
+    │       └── main.yml
+    ├── db_servers
+    │   └── tasks
+    │       └── main.yml
+    ├── defaults
+    │   └── tasks
+    │       └── main.yml
+    ├── domainname
+    │   └── tasks
+    │       └── main.yml
+    └── web_servers
+        └── tasks
+            └── main.yml
+
+
+cat inventory.txt
+[controller]
+192.168.0.28
+
+[rocky]
+rocky04.toyo.loc ansible_hostname=192.168.0.30
+rocky02.toyo.loc ansible_hostname=192.168.0.38
+rocky03.toyo.loc ansible_hostname=192.168.0.39
+
+[db]
+192.168.0.38
+
+[web]
+192.168.0.39
+
+[samba]
+192.168.0.30
+
+[test]
+192.168.0.30
+
+cat baseline.yml 
+---
+- hosts: all
+  become: true
+  roles:
+    - baseline
+
+- hosts: all
+  become: true
+  roles:
+    - domainname
+
+- hosts: db
+  become: true
+  roles:
+    - db_servers
+      
+            
+cat ansible/roles/domainname/tasks/main.yml 
+
+- name: Update hostname to FQDN
+  lineinfile:
+    state=present
+    dest=/etc/hosts
+    line="{{ansible_default_ipv4.address }} {{inventory_hostname_short}} {{inventory_hostname}}"
+    regexp="^{{ ansible_default_ipv4.address }}"
+  when:
+    ansible_fqdn != inventory_hostname
+
+cat ansible/roles/baseline/tasks/main.yml 
+- name: Update and Upgrade All Debian
+  apt:
+    upgrade: yes  
+    update_cache: yes
+  when: ansible_distribution in ["Ubuntu","Debian"]
+
+- name: Update and Upgrade All Redhat
+  dnf:
+    name: "*"
+    state: latest
+    update_cache: yes
+  when: ansible_distribution in ["Rocky","Fedora"]
+
+- name: Install YUM Utils
+  dnf:
+    name: yum-utils
+    state: latest
+  when: ansible_distribution in ["Rocky","Fedora"]
+
+- name: Check to see if a reboot is required
+  ansible.builtin.command: needs-restarting -r
+  register: reg_reboot_required
+  ignore_errors: true
+  failed_when: false
+  changed_when: reg_reboot_required.rc != 0
+  notify:
+    - Reboot Rocky
+  when: ansible_distribution in ["Rocky","Fedora"]
+
+- name: Install Default Packages
+  package:
+    name: unzip
+
+
+cat ansible/roles/domainname/handlers/main.yml 
+- name: Reboot Rocky
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    reboot_timeout: 3600
+    test_command: uptime

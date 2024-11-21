@@ -1,0 +1,31 @@
+- name: Install Web Server
+  dnf:
+    name:
+      - httpd
+      - php
+    state: latest
+  when: ansible_distribution in ["Rocky","Fedora"]
+
+- name: Start httpd Service
+  ansible.builtin.service:  
+      name: httpd
+      state: started
+      enabled: yes 
+  when: ansible_distribution in ["Rocky","Fedora"]
+    
+- name: Copy Website
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  
+  notify:
+    - port80
+    - port443
+
+- name: Reload Firewall D
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded

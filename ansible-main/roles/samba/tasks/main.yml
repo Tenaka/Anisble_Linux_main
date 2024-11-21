@@ -1,0 +1,29 @@
+- name: Install Samba Server
+  dnf:
+    name:
+      - samba
+      - samba-common
+      - samba-client
+    state: latest
+  when: ansible_distribution in ["Rocky","Fedora"]
+
+- name: Move the default smb conf file
+  ansible.builtin.command: mv /etc/samba/smb.conf /etc/samba/smb.backup
+
+- name: Create new Share
+  ansible.builtin.file:
+    path: /srv/samba/data
+    state: directory
+
+- name: Configure Samba smb conf file
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+  notify: 
+   - start samba
+   - start nmb
+   - portsamba
+  when: ansible_distribution in ["Rocky","Fedora"]
+
+
+

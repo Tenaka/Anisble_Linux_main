@@ -1,0 +1,27 @@
+- name: Add Microsoft GPG key
+  rpm_key:
+    state: present
+    key: https://packages.microsoft.com/keys/microsoft.asc
+
+- name: Add Visual Studio Code repository
+  yum_repository:
+    name: vscode
+    description: "Visual Studio Code"
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+- name: Install Visual Studio Code
+  yum:
+    name: code
+    state: latest
+
+- name: Verify Visual Studio Code installation
+  command: code --no-sandbox --user-data-dir=/home/user/vscode --version
+  register: vscode_version
+  changed_when: false
+
+- name: Display Visual Studio Code version
+  debug:
+    msg: "Visual Studio Code version: {{ vscode_version.stdout }}"

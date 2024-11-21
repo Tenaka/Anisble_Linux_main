@@ -1,0 +1,25 @@
+- name : k8 Workers Firewall TCP Ports
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - 10250
+    - 30000-32767
+    - 179
+
+
+- name : k8 Workers Firewall UDP Ports
+  firewalld:
+    port: "{{ item }}/udp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - 4789
+
+- name: k8 Workers Reload Firewall
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded

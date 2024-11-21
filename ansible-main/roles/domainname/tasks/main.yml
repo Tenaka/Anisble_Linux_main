@@ -1,0 +1,16 @@
+#- name: Create A Record
+#  community.windows.win_dns_record:
+#    name: "{{ inventory_hostname }}"
+#    type: "A"
+#    value: "{{ ansible_default_ipv4.address  }}"
+#    zone: "{{ FQDN }}"
+
+
+- name: Update hostname to FQDN
+  lineinfile:
+    state=present
+    dest=/etc/hosts
+    line="{{ ansible_default_ipv4.address }} {{ inventory_hostname_short }} {{ inventory_hostname }}"
+    regexp="^{{ ansible_default_ipv4.address }}"
+  when:
+    ansible_fqdn != inventory_hostname

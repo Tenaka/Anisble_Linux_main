@@ -1,0 +1,19 @@
+- name: start samba
+  service:
+    name: smb.service
+    enabled: true
+    state: started
+
+- name: start nmb
+  service:
+    name: nmb.service
+    enabled: true
+    state: started
+ 
+- name: portsamba
+  ansible.posix.firewalld:
+    service: samba
+    immediate: yes
+    permanent: yes 
+    state: enabled
+

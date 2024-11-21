@@ -1,0 +1,12 @@
+---
+packages:
+  - bind-utils
+  - iproute
+  - iputils
+  - tcpdump
+  - net-tools
+  - tree
+  - unzip
+  - vim
+  - wget
+  - wireshark   

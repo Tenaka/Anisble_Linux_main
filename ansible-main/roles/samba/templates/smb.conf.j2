@@ -1,0 +1,15 @@
+[global]
+  workgroup = WORKGROUP
+  server string = Samba Server %v
+  netbios name = rocky04
+  log file = /var/log/samba/log.%m
+  max log size = 50
+  security = user
+  passdb backend = tdbsam
+
+[shared]
+  path = /srv/samba/data
+  browsable = yes
+  writeable = yes
+  guest ok = yes
+  read only = no

@@ -1,0 +1,68 @@
+---
+
+- hosts: all
+  vars:
+    FQDN: openshift.loc
+  become: true
+  roles:
+    - baseline
+
+- hosts: all
+  become: true
+  roles:
+    - domainname
+
+- hosts: db
+  become: true
+  roles:
+    - db_servers
+
+- hosts: web
+  become: true
+  roles:
+    - web_servers
+
+- hosts: samba
+  become: true
+  roles:
+    - samba
+
+- hosts: visualstudio
+  become: true
+  roles:
+    - visualstudio
+
+- hosts: k3_k8_baseline
+  become: true
+  roles:
+    - k3_k8_baseline
+
+- hosts: k8_masters
+  become: true
+  roles:
+    - k8_masters
+
+- hosts: k8_workers
+  become: true
+  roles:
+    - k8_workers
+
+- hosts: k3_masters
+  become: true
+  roles:
+    - k3_masters
+
+- hosts: k3_workers
+  become: true
+  roles:
+    - k3_workers
+
+
+
+
+
+
+
+
+
+

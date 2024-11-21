@@ -1,0 +1,42 @@
+[controller]
+rocky01.openshift.loc ansible_hostname=192.168.0.28
+
+[rocky]
+rocky04.openshift.loc ansible_hostname=192.168.0.30
+rocky02.openshift.loc ansible_hostname=192.168.0.38
+rocky03.openshift.loc ansible_hostname=192.168.0.39
+k8-master01.openshift.loc ansible_hostname=192.168.0.20
+k8-worker01.openshift.loc ansible_hostname=192.168.0.29
+k8-worker02.openshift.loc ansible_hostname=192.168.0.37
+
+
+[ubuntu]
+
+
+[db]
+#rocky02.openshift.loc
+
+[web]
+rocky03.openshift.loc
+
+[samba]
+rocky04.openshift.loc
+
+[visualstudio]
+rocky01.openshift.loc
+
+[k3_k8_baseline]
+k8-master01.openshift.loc
+k8-worker01.openshift.loc
+k8-worker02.openshift.loc
+
+[k3_masters]
+
+[k3_workers]
+
+[k8_masters]
+k8-master01.openshift.loc
+
+[k8_workers]
+k8-worker01.openshift.loc 
+k8-worker02.openshift.loc

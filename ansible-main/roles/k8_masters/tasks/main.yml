@@ -1,0 +1,35 @@
+- name : k8 Master Firewall TCP Ports
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - 6443
+    - 2379
+    - 2380
+    - 10250
+    - 10251
+    - 10252
+    - 10257
+    - 10259
+    - 179
+
+
+- name : k8 Master Firewall UDP Ports
+  firewalld:
+    port: "{{ item }}/udp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - 4789
+
+- name: k8 Master Reload Firewall
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded
+
+
+
+   

@@ -1,0 +1,5 @@
+- name: Reboot Rocky
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    reboot_timeout: 3600
+    test_command: uptime
