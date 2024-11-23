@@ -17,11 +17,16 @@
     name: code
     state: latest
 
-- name: Verify Visual Studio Code installation
-  command: code --no-sandbox --user-data-dir=/home/user/vscode --version
-  register: vscode_version
-  changed_when: false
+#Dont run as root
+- name: Install desired VS Code extensions
+  become: false
+  shell: "code --install-extension {{ item }} --force"
+  loop:
+    - redhat.ansible
+    - redhat.vscode-yaml
+  register: vscode_extensions
+  changed_when: "'already installed' not in vscode_extensions.stdout"
 
-- name: Display Visual Studio Code version
+- name: Display installed extensions
   debug:
-    msg: "Visual Studio Code version: {{ vscode_version.stdout }}"
+    msg: "Installed extensions: {{ vscode_extensions.results | map(attribute='item') | list }}"
